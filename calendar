@@ -1,0 +1,187 @@
+package com.check.flights;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.Select;
+import org.testng.Reporter;
+
+public class Testexpedia {
+
+	//public WebDriver driver;
+			
+			 
+			// Initialize browser
+	
+			@Test
+			public void openexpedia() throws InterruptedException {
+		
+				
+
+				 
+				
+					
+						
+					//	Reporter.log("=====Browser Session Started=====", true);
+						
+						
+						Reporter.log("=====Browser Session Started=====", true);
+						
+						Map<String, Object> prefs = new HashMap<String, Object>();
+				        
+				        // Set the notification setting it will override the default setting
+				prefs.put("profile.default_content_setting_values.notifications", 2);
+
+				        // Create object of ChromeOption class
+				ChromeOptions options = new ChromeOptions();
+
+				        // Set the experimental option
+				options.setExperimentalOption("prefs", prefs);
+
+				        // pass the options object in Chrome driver
+				System.setProperty("webdriver.chrome.driver", "C:\\chrome\\chromedriver.exe");
+				WebDriver driver = new ChromeDriver(options);
+
+				//WebDriver driver=new ChromeDriver();
+				String baseurl = " https://www.expedia.co.in/";
+				
+				Thread.sleep(5000);
+				driver.get(baseurl);
+						driver.manage().window().maximize();
+						Thread.sleep(5000);
+				
+	WebElement flights=	driver.findElement(By.xpath("//span[@class='tab-label' and contains (text(),'Flights')]"));
+	System.out.println("Check if flight radio button is present " + flights.isSelected());
+
+	flights.click();
+	
+	Thread.sleep(5000);
+	
+	//System.out.println("Check if flight radio button is present " + flights.isSelected());
+	
+	WebElement RoundTrip=driver.findElement(By.xpath("//label[@id='flight-type-roundtrip-label']"));
+	//System.out.println("Check if flight radio button is present " + RoundTrip.isSelected());
+
+	RoundTrip.click();
+	//System.out.println("Check if flight radio button is present " + RoundTrip.isSelected());
+	
+	Thread.sleep(5000);
+	
+	
+	Reporter.log("=====select the origin =====", true);
+	
+	//String partialText ="che";
+	String expectedStation ="Chennai, India (MAA-Chennai Intl.)";
+	
+	
+	WebElement OriginStation=driver.findElement(By.id("flight-origin"));
+	OriginStation.sendKeys(expectedStation);
+
+	/*
+	WebElement SuggestionBox = driver.findElement(By.xpath("//UL[@id='typeaheadDataPlain']"));
+	List<WebElement> Suggestions =SuggestionBox.findElements(By.tagName("li"));
+	Thread.sleep(3000);
+
+int size= Suggestions.size();
+for (int i=0;i<size;i++)
+{
+System.out.println("the suggestions in the box based on the partial text "+ Suggestions.get(i).getText());	
+
+}
+
+for (WebElement expectedResult:Suggestions)
+{
+	if(expectedResult.getText().equals(expectedStation))
+	{
+		System.out.println("the origin is " + expectedStation);
+		expectedResult.click();
+	}
+}*/
+	WebElement DestStation=driver.findElement(By.id("flight-destination"));
+	DestStation.sendKeys("DEL");
+	
+	Reporter.log("=====click on the dates=====", true);
+	
+	WebElement StartingDate=driver.findElement(By.id("flight-departing"));
+	StartingDate.click();
+	
+	WebElement startingMonth =driver.findElement(By.xpath("(//DIV[@class='datepicker-cal-month'])[1]"));
+	List<WebElement> validStartdates = startingMonth.findElements(By.tagName("button"));
+	
+	for (WebElement date:validStartdates)
+	{
+		if(date.getText().equals("15"))
+		{
+			date.click();
+		    break;
+		}
+		
+	}
+	
+	Thread.sleep(2000);
+	
+	
+	//driver.findElement(By.xpath("(//BUTTON[@type='button'][text()='29'][text()='29'])[1]")).click();
+	
+	WebElement ReturningDate=driver.findElement(By.id("flight-returning"));
+	ReturningDate.click();
+	
+	WebElement returningMonth =driver.findElement(By.xpath("(//DIV[@class='datepicker-cal-month'])[2]"));
+	
+	List<WebElement> returnValidDate = returningMonth.findElements(By.tagName("button"));
+	
+	for(WebElement Journeydate:returnValidDate)
+		
+	{
+		if(Journeydate.getText().equals("1"))
+		{
+			
+			System.out.println("your Journey date is 1");
+			Journeydate.click();
+			break;
+		}
+		
+	}
+	
+	Thread.sleep(2000);
+	
+	Select selectchildnumber= new Select(driver.findElement(By.id("flight-children")));
+	selectchildnumber.selectByVisibleText("1");
+	
+	Thread.sleep(2000);
+	System.out.println("the child specifics are displayed : "+ driver.findElement(By.id("flight-age-select-1")).isDisplayed());
+	
+	Select selectAgeForChild = new Select(driver.findElement(By.id("flight-age-select-1")));
+	
+	selectAgeForChild.selectByIndex(3);
+	
+	//add a hotel
+	
+	/*WebElement SelectHotel = driver.findElement(By.id("flight-add-hotel-checkbox"));
+	SelectHotel.click();
+	*/
+	
+	
+	//click search
+	
+	WebElement Search = driver.findElement(By.id("search-button"));
+	Search.click();
+	Thread.sleep(2000);
+	
+	System.out.println("your search results are ");
+	driver.quit();
+	
+	} }
+
